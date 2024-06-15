@@ -1,4 +1,4 @@
-![gitactions]()
+![gitactions](https://github.com/seoksanghwan/gitactions/actions/workflows/basic.yml/badge.svg)
 
 # Getting Started with Create React App
 
