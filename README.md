@@ -1,4 +1,4 @@
-![CI](https://github.com/github/docs/actions/workflows/basic.yml/badge.svg)
+![CI](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
 # Getting Started with Create React App
 
