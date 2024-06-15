@@ -13,4 +13,4 @@ jobs:
           brew update
           brew install tree
       - name: Execute tree
-        run: time tree | tee filetreelist.text
+        run: time tree | tee filetreelist.txt
