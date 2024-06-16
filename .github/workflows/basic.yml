@@ -27,8 +27,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: archive.zip
-          path: build
+          name: archive
+          path: build/
 
   deploy-dev:
     needs: [build-and-test]
@@ -41,15 +41,15 @@ jobs:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
-          name: archive.zip
+          name: archive
 
-      - name: release to develop
+      - name: release to dev
         uses: softprops/action-gh-release@v0.1.15
         with:
           tag_name: v${{ vars.DEV_VERSION }}
           prerelease: true
           draft: true
-          name: dev
+          name: Development
           files: build/**
         env:
           GITHUB_TOKEN: ${{ secrets.DEV_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
-          name: archive.zip
+          name: archive
 
       - name: release to main
         uses: softprops/action-gh-release@v0.1.15
