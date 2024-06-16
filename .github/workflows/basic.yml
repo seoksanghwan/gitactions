@@ -47,14 +47,15 @@ jobs:
           name: archive.zip
 
       - name: release to dev
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ vars.DEV_VERSION }}
-          token: ${{secrets.DEV_TOKEN}}
           prerelease: true
           draft: true
           name: Development
           files: archive.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEV_TOKEN }}
 
   deploy-prod:
     needs: [build-and-test]
@@ -70,10 +71,13 @@ jobs:
           name: archive.zip
 
       - name: release to main
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ vars.PROD_VERSION }}
-          token: ${{secrets.PROD_TOKEN}}
-          generate_release_notes: true
+          prerelease: false
+          draft: false
           name: Production
           files: archive.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROD_TOKEN }}
