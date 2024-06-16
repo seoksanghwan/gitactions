@@ -24,11 +24,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create archive
+        run: zip -r archive.zip build/
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
           name: archive.zip
-          path: build/libs
+          path: archive.zip
 
   deploy-dev:
     needs: [build-and-test]
@@ -51,7 +54,7 @@ jobs:
           prerelease: true
           draft: true
           name: Development
-          files: archive.tar.gz
+          files: archive.zip
 
   deploy-prod:
     needs: [build-and-test]
@@ -73,4 +76,4 @@ jobs:
           token: ${{secrets.PROD_TOKEN}}
           generate_release_notes: true
           name: Production
-          files: archive.tar.gz
+          files: archive.zip
