@@ -27,8 +27,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-artifact
-          path: build/
+          name: archive.zip
+          path: build/libs
 
   deploy-dev:
     needs: [build-and-test]
