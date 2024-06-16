@@ -21,9 +21,9 @@ jobs:
       run:
         shell: sh
         working-directory: test
-      steps:
-        - uses: Actions/checkout@v3
-        - run: echo "in test"
+    steps:
+      - uses: Actions/checkout@v3
+      - run: echo "in test"
   report-url:
     runs-on: ubuntu-latest
     steps:
