@@ -24,17 +24,6 @@ jobs:
     steps:
       - uses: Actions/checkout@v3
       - run: echo "in test"
-  report-url:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}
-  # This job checks out code from the reop
-  report-os:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checks-os
-        if: runner.os != 'Windows'
-        run: echo "The runner's operating system is $RUNNER_OS"
   checkout:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
