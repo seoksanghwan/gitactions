@@ -24,11 +24,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create archive
+        run: zip -r archive.zip build/
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: archive
-          path: build/
+          name: archive.zip
+          path: archive.zip
 
   deploy-dev:
     needs: [build-and-test]
@@ -41,16 +44,16 @@ jobs:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
-          name: archive
+          name: archive.zip
 
       - name: release to dev
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ vars.DEV_VERSION }}
           prerelease: true
           draft: true
           name: Development
-          files: build/**
+          files: archive.zip
         env:
           GITHUB_TOKEN: ${{ secrets.DEV_TOKEN }}
 
@@ -65,15 +68,16 @@ jobs:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
-          name: archive
+          name: archive.zip
 
       - name: release to main
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ vars.PROD_VERSION }}
-          prerelease: true
-          draft: true
+          prerelease: false
+          draft: false
           name: Production
-          files: build/**
+          files: archive.zip
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.PROD_TOKEN }}
