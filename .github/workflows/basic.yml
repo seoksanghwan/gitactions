@@ -7,9 +7,23 @@ on:
     branches: [main]
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+    working-directory: workdir
+
 run-name: Pipeline run by @${{ github.actor }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+        working-directory: test
+    steps:
+      - uses: Actions/checkout@v3
+      - run: echo "in test"
   report-url:
     runs-on: ubuntu-latest
     steps:
