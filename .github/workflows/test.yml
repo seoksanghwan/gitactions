@@ -17,5 +17,4 @@ jobs:
         working-directory: test
     steps:
       - uses: Actions/checkout@v3
-      - run: mkdir -p test
       - run: echo "in test"
