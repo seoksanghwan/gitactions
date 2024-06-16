@@ -10,7 +10,26 @@ on:
 run-name: Pipeline run by @${{ github.actor }}
 
 jobs:
+  verify:
+    name: ${{vars.JOB_NAME}}
+    if: ${{vars.EXEC_WF == 'true'}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          [[ -f ${{ vars.FILE_TO_CHECK }} ]] || 
+          ( echo "${{ vars.FILE_TO_CHECK }} file needs to be added to ${{ github.repository}} !" && exit 1 )
+  report-url:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}
   # This job checks out code from the reop
+  report-os:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checks-os
+        if: runner.os != 'Windows'
+        run: echo "The runner's operating system is $RUNNER_OS"
   checkout:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
