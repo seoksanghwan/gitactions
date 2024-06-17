@@ -26,6 +26,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
+      artifact-tag: ${{ steps.changelog.outputs.version }}
       build-stage: ${{ steps.set-debug-stage.outputs.BUILD_STAGE }}
     steps:
       - name: Set debug
