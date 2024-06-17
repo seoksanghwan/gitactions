@@ -35,7 +35,7 @@ jobs:
 
       - name: Generate changelog
         id: changelog
-        run: echo "::set-output name=version::1.0.0" # Replace with your actual version generation logic
+        run: echo "::set-output name=version::1.0.0"  # Replace with your actual version generation logic
 
   reports:
     runs-on: ubuntu-latest
@@ -59,8 +59,5 @@ jobs:
             --url https://api.github.com/repos/${{ github.repository }}/issues \
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'content-type: application/json' \
-            --data '{ 
-              "title": "Failure: ${{ inputs.title }}", 
-              "body": "Details: ${{ inputs.body }}" 
-            }' \
+            --data '{ "title": "Failure: ${{ inputs.title }}", "body": "Details: ${{ inputs.body }}" }' \
             --fail
