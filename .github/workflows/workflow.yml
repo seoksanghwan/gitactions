@@ -40,6 +40,9 @@ jobs:
       - name: Get Stage
         run: echo "The build stage is ${{ needs.setup.outputs.build-stage }}"
 
+      - name: Get Artifact Tag
+        run: echo "The artifact tag is ${{ needs.setup.outputs.artifact-tag }}"
+
   create_issue_on_failure:
     runs-on: ubuntu-latest
     permissions:
