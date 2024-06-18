@@ -7,11 +7,11 @@ on:
         required: true
     inputs:
       title:
-        description: 'Issue Title'
+        description: 'Issue title'
         required: true
         type: string
       body:
-        description: 'Issue Body'
+        description: 'Issue body'
         required: true
         type: string
 
@@ -26,10 +26,10 @@ jobs:
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/issues \
-          --header 'authorization: Bearer ${{ secrets.token }}' \
-          --header 'content-type: application/json' \
+          --header "authorization: Bearer ${{ secrets.token }}" \
+          --header "content-type: application/json" \
           --data '{ 
-            "title": "Failure: ${{ inputs.title }}",
-            "body": "Details: ${{ inputs.body }}" 
+            "title": "${{ inputs.title }}",
+            "body": "${{ inputs.body }}" 
             }' \
           --fail
