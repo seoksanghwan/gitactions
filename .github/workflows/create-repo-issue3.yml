@@ -2,19 +2,19 @@ name: create-repo-issue3
 
 on:
   workflow_call:
-  inputs:
-    title:
-      description: 'Issue Title'
-      required: true
-      type: string
-    body:
-      description: 'Issue Body'
-      required: true
-      type: string
-  outputs:
-    issue-num:
-      description: 'The Issue Number'
-      value: ${{ jobs.create-issue.outputs.inum }}
+    inputs:
+      title:
+        description: 'Issue Title'
+        required: true
+        type: string
+      body:
+        description: 'Issue Body'
+        required: true
+        type: string
+    outputs:
+      issue-num:
+        description: 'The Issue Number'
+        value: ${{ jobs.create-issue.outputs.inum }}
 
 jobs:
   create-issue:
