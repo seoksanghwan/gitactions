@@ -10,7 +10,7 @@ jobs:
       - run: echo "Simple demo for for resuable workflow"
 
   issue:
-    uses: rndrepos/common/.github/workflows/create-demo-issue.yml@main
+    uses: rndrepos/common/.github/workflows/create-repo-issue.yml@main
     secrets:
       token: ${{ secrets.PAT }}
     with:
