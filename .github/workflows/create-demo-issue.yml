@@ -11,8 +11,8 @@ jobs:
 
   issue:
     uses: rndrepos/common/.github/workflows/create-repo-issue.yml@main
+    with:
+      title: 'Test issue'
+      body: 'Test body'
     secrets:
       token: ${{ secrets.PAT }}
-    with:
-      title: 'Test Issue'
-      body: 'Test Body'

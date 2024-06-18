@@ -7,11 +7,11 @@ on:
         required: true
     inputs:
       title:
-        description: 'Issue Title'
+        description: 'Issue title'
         required: true
         type: string
       body:
-        description: 'Issue Body'
+        description: 'Issue body'
         required: true
         type: string
 
