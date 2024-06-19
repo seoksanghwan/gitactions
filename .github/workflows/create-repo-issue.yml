@@ -24,9 +24,10 @@ jobs:
     steps:
       - name: Create Issue using REST API
         run: |
+          echo "Using token: ${{ secrets.token }}"  # 토큰 값 확인용 출력
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/issues \
-          --header "authorization: Bearer ${{ secrets.token }}" \
+          --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           --header "content-type: application/json" \
           --data '{ 
             "title": "${{ inputs.title }}",
