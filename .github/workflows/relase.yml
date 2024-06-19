@@ -42,24 +42,15 @@ jobs:
         NEW_TAG="$MAJOR.$MINOR.$PATCH"
         echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
-    - name: Configure Git
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-
-    - name: Create new tag
-      run: |
-        git tag ${{ env.new_tag }}
-        git push origin ${{ env.new_tag }}
-
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v0.1.15
       with:
         tag_name: ${{ env.new_tag }}
         name: Release ${{ env.new_tag }}
         body: |
           Changes in this release:
           - Description of changes goes here.
+        draft: false
+        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
