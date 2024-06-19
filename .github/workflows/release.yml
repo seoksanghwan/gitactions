@@ -5,7 +5,6 @@ run-name: Pipeline run by @${{ github.actor }}
 on:
   push:
     branches: ['main', 'develop']
-    
 
 jobs:
   build-and-test:
@@ -34,13 +33,26 @@ jobs:
           name: archive.zip
           path: archive.zip
 
+      - name: Get current version
+        id: get_version
+        run: echo "CURRENT_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Increment version
+        id: increment_version
+        run: |
+          VERSION=${{ env.CURRENT_VERSION }}
+          IFS='.' read -r -a parts <<< "$VERSION"
+          parts[2]=$((parts[2]+1))
+          NEW_VERSION="${parts[0]}.${parts[1]}.${parts[2]}"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
   deploy-dev:
     needs: [build-and-test]
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment:
       name: dev
-      url: https://github.com/${{ github.repository }}/releases/tag/v${{ vars.DEV_VERSION }}
+      url: https://github.com/${{ github.repository }}/releases/tag/v${{ env.NEW_VERSION }}
     steps:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
@@ -48,9 +60,9 @@ jobs:
           name: archive.zip
 
       - name: release to dev
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
-          tag_name: v${{ vars.DEV_VERSION }}
+          tag_name: v${{ env.NEW_VERSION }}
           prerelease: true
           draft: true
           name: Development
@@ -64,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://github.com/${{ github.repository }}/releases/tag/v${{ vars.PROD_VERSION }}
+      url: https://github.com/${{ github.repository }}/releases/tag/v${{ env.NEW_VERSION }}
     steps:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
@@ -72,9 +84,9 @@ jobs:
           name: archive.zip
 
       - name: release to main
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
-          tag_name: v${{ vars.PROD_VERSION }}
+          tag_name: v${{ env.NEW_VERSION }}
           prerelease: false
           draft: false
           name: Production
