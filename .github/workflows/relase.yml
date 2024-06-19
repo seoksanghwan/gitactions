@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup Node.js
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 'latest'
@@ -46,16 +46,12 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
     - name: Create new tag
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { execSync } = require('child_process');
-          const tag = process.env.NEW_TAG;
-          execSync(`git tag ${tag}`);
-          execSync(`git push origin ${tag}`);
-          console.log(`Created and pushed tag ${tag}`);
+      run: |
+        git tag ${{ env.new_tag }}
+        git push origin ${{ env.new_tag }}
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
