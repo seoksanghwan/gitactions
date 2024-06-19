@@ -48,12 +48,14 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Create new tag
-      id: create_tag
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        git tag ${{ env.new_tag }}
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ env.new_tag }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { execSync } = require('child_process');
+          const tag = process.env.NEW_TAG;
+          execSync(`git tag ${tag}`);
+          execSync(`git push origin ${tag}`);
+          console.log(`Created and pushed tag ${tag}`);
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
