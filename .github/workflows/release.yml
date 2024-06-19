@@ -35,7 +35,10 @@ jobs:
 
       - name: Get current version
         id: get_version
-        run: echo "CURRENT_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+        run: |
+          CURRENT_VERSION=$(git describe --tags --abbrev=0)
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+          echo "CURRENT_VERSION=$CURRENT_VERSION"
 
       - name: Increment version
         id: increment_version
@@ -48,6 +51,9 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION"
           echo "::set-output name=new_version::$NEW_VERSION"
+
+      - name: Print new version for debugging
+        run: echo "New version is ${{ steps.increment_version.outputs.new_version }}"
 
   deploy-dev:
     needs: [build-and-test]
