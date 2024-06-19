@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'latest'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Get the current tag
+      id: get_tag
+      run: |
+        TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        if [ -z "$TAG" ]; then
+          echo "::set-output name=tag::0.0.0"
+        else
+          echo "::set-output name=tag::$TAG"
+        fi
+
+    - name: Calculate new tag
+      id: new_tag
+      run: |
+        TAG=${{ steps.get_tag.outputs.tag }}
+        IFS='.' read -r -a TAG_PARTS <<< "$TAG"
+        MAJOR=${TAG_PARTS[0]}
+        MINOR=${TAG_PARTS[1]}
+        PATCH=${TAG_PARTS[2]}
+        PATCH=$((PATCH + 1))
+        NEW_TAG="$MAJOR.$MINOR.$PATCH"
+        echo "::set-output name=new_tag::$NEW_TAG"
+
+    - name: Create new tag
+      id: create_tag
+      run: |
+        git tag ${{ steps.new_tag.outputs.new_tag }}
+        git push origin ${{ steps.new_tag.outputs.new_tag }}
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.new_tag.outputs.new_tag }}
+        name: Release ${{ steps.new_tag.outputs.new_tag }}
+        body: |
+          Changes in this release:
+          - Description of changes goes here.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
