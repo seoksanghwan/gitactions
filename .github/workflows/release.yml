@@ -48,7 +48,7 @@ jobs:
           name: archive.zip
 
       - name: release to dev
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
           tag_name: v${{ vars.DEV_VERSION }}
           prerelease: true
@@ -72,7 +72,7 @@ jobs:
           name: archive.zip
 
       - name: release to main
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
           tag_name: v${{ vars.PROD_VERSION }}
           prerelease: false
