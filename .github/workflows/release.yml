@@ -46,7 +46,8 @@ jobs:
           parts[2]=$((parts[2]+1))
           NEW_VERSION="${parts[0]}.${parts[1]}.${parts[2]}"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "New version is $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION"
+          echo "::set-output name=new_version::$NEW_VERSION"
 
   deploy-dev:
     needs: [build-and-test]
@@ -54,17 +55,20 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: dev
-      url: https://github.com/${{ github.repository }}/releases/tag/v${{ env.NEW_VERSION }}
+      url: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.build-and-test.outputs.new_version }}
     steps:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
           name: archive.zip
 
+      - name: Print new version for debugging
+        run: echo "Deploying version ${{ needs.build-and-test.outputs.new_version }} to dev"
+
       - name: release to dev
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.NEW_VERSION }}
+          tag_name: v${{ needs.build-and-test.outputs.new_version }}
           prerelease: true
           draft: true
           name: Development
@@ -78,17 +82,20 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://github.com/${{ github.repository }}/releases/tag/v${{ env.NEW_VERSION }}
+      url: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.build-and-test.outputs.new_version }}
     steps:
       - name: Download candidate artifacts
         uses: actions/download-artifact@v3
         with:
           name: archive.zip
 
+      - name: Print new version for debugging
+        run: echo "Deploying version ${{ needs.build-and-test.outputs.new_version }} to prod"
+
       - name: release to main
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.NEW_VERSION }}
+          tag_name: v${{ needs.build-and-test.outputs.new_version }}
           prerelease: false
           draft: false
           name: Production
