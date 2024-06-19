@@ -41,13 +41,12 @@ jobs:
         id: increment_version
         run: |
           VERSION=${{ env.CURRENT_VERSION }}
+          echo "Current version is $VERSION"
           IFS='.' read -r -a parts <<< "$VERSION"
           parts[2]=$((parts[2]+1))
           NEW_VERSION="${parts[0]}.${parts[1]}.${parts[2]}"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-
-      - name: Print new version for debugging
-        run: echo "New version is ${{ env.NEW_VERSION }}"
+          echo "New version is $NEW_VERSION"
 
   deploy-dev:
     needs: [build-and-test]
@@ -62,11 +61,8 @@ jobs:
         with:
           name: archive.zip
 
-      - name: Print new version for debugging
-        run: echo "Deploying version ${{ env.NEW_VERSION }} to dev"
-
       - name: release to dev
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
           tag_name: v${{ env.NEW_VERSION }}
           prerelease: true
@@ -89,11 +85,8 @@ jobs:
         with:
           name: archive.zip
 
-      - name: Print new version for debugging
-        run: echo "Deploying version ${{ env.NEW_VERSION }} to prod"
-
       - name: release to main
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         with:
           tag_name: v${{ env.NEW_VERSION }}
           prerelease: false
