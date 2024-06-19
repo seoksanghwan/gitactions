@@ -27,36 +27,32 @@ jobs:
     - name: Get the current tag
       id: get_tag
       run: |
-        TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-        if [ -z "$TAG" ]; then
-          echo "::set-output name=tag::0.0.0"
-        else
-          echo "::set-output name=tag::$TAG"
-        fi
+        TAG=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "0.0.0")
+        echo "tag=$TAG" >> $GITHUB_ENV
 
     - name: Calculate new tag
       id: new_tag
       run: |
-        TAG=${{ steps.get_tag.outputs.tag }}
+        TAG=${{ env.tag }}
         IFS='.' read -r -a TAG_PARTS <<< "$TAG"
         MAJOR=${TAG_PARTS[0]}
         MINOR=${TAG_PARTS[1]}
         PATCH=${TAG_PARTS[2]}
         PATCH=$((PATCH + 1))
         NEW_TAG="$MAJOR.$MINOR.$PATCH"
-        echo "::set-output name=new_tag::$NEW_TAG"
+        echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
     - name: Create new tag
       id: create_tag
       run: |
-        git tag ${{ steps.new_tag.outputs.new_tag }}
-        git push origin ${{ steps.new_tag.outputs.new_tag }}
+        git tag ${{ env.new_tag }}
+        git push origin ${{ env.new_tag }}
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.new_tag.outputs.new_tag }}
-        name: Release ${{ steps.new_tag.outputs.new_tag }}
+        tag_name: ${{ env.new_tag }}
+        name: Release ${{ env.new_tag }}
         body: |
           Changes in this release:
           - Description of changes goes here.
